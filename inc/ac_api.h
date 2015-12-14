@@ -33,7 +33,8 @@ void AC_BuildMessage(u8 u8MsgCode, u8 u8MsgId,
 void ZC_SendDeviceRegsiter(AC_OptList *pstruOptList, u8 *pu8EqVersion, u8 *pu8ModuleKey, u64 u64Domain, u8 *pu8DeviceId);
 void AC_SendAckMsg(AC_OptList *pstruOptList, u8 u8MsgId);
 void AC_SendErrMsg(AC_OptList *pstruOptList, u8 u8MsgId, u8 *pu8ErrorMsg, u16 u16DataLen);
-void AC_SendRestMsg(AC_OptList *pstruOptList);
+void AC_SendRestMsg(void);
+void AC_SendUbindMsg(void);
 void AC_RecvMessage(ZC_MessageHead *pstruMsg);
 void AC_ParseOption(ZC_MessageHead *pstruMsg, AC_OptList *pstruOptList, u16 *pu16OptLen);
 void AC_SendDeviceRegsiterWithMac(u8 *pu8EqVersion, u8 *pu8ModuleKey, u64 u64Domain);

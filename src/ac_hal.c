@@ -13,7 +13,7 @@
 #include <ac_api.h>
 #include <ac_hal.h>
 #include <ac_cfg.h>
-
+#include <zc_configuration.h>
 
 u32 g_u32CloudStatus = CLOUDDISCONNECT;
 typedef struct tag_STRU_LED_ONOFF
@@ -33,6 +33,11 @@ u64  g_u64Domain = ((((u64)((SUB_DOMAIN_ID & 0xff00) >> 8)) << 48) + (((u64)(SUB
 	+ ((((u64)MAJOR_DOMAIN_ID & 0xff00000000) >> 32) << 8)
 	+ ((((u64)MAJOR_DOMAIN_ID & 0xff0000000000) >> 40) << 0));
 u8  g_u8DeviceId[ZC_HS_DEVICE_ID_LEN] = DEVICE_ID;
+#ifdef TEST_ADDR	
+#define CLOUD_ADDR "test.ablecloud.cn"
+#else
+#define CLOUD_ADDR "device.ablecloud.cn"
+#endif
 /*************************************************
 * Function: AC_SendDevStatus2Server
 * Description: 
@@ -63,27 +68,14 @@ void AC_SendLedStatus2Server()
 *************************************************/
 void AC_ConfigWifi()
 {
-    u16 u16DateLen;
-    ZC_Configuration struConfig;
-    u8 u8CloudKey[ZC_CLOUD_KEY_MAX_LEN] = DEFAULT_IOT_CLOUD_KEY;
-    
-    u8 u8CloudAddr[] = "test.ablecloud.cn";
-    struConfig.u32TraceSwitch = ZC_HTONL(0);     //Trace data switch, 1:open, 0:close,default 0
-    struConfig.u32SecSwitch = ZC_HTONL(0);       //Sec data switch, 1:open, 0:close, 2:close RSA, default 1
-    struConfig.u32WifiConfig =  ZC_HTONL(0);      //Use Config SSID,password,1:open, 0:close, default 0
-    struConfig.u32ServerAddrConfig = ZC_HTONL(0);      //connect with test url,1:open, 0:close, default 0
-    struConfig.u32IpAddr = ZC_HTONL(0xc0a8c772);  //local test ip
-
-    memcpy(struConfig.u8CloudAddr, u8CloudAddr, 18);
-    memcpy(struConfig.u8CloudKey, u8CloudKey, ZC_CLOUD_KEY_MAX_LEN);
-
-    AC_BuildMessage(ZC_CODE_CONFIG, 0, 
-        (u8*)&struConfig, sizeof(ZC_Configuration),        /*payload+payload len*/
-        NULL,
-        g_u8DevMsgBuildBuffer, &u16DateLen);
-
-    AC_SendMessage(g_u8DevMsgBuildBuffer, u16DateLen);
-
+#ifdef TEST_ADDR	
+    g_struZcConfigDb.struSwitchInfo.u32SecSwitch = 0;
+#else
+    g_struZcConfigDb.struSwitchInfo.u32SecSwitch = 1;  
+#endif
+    g_struZcConfigDb.struSwitchInfo.u32TraceSwitch = 0;
+    g_struZcConfigDb.struSwitchInfo.u32WifiConfig = 0;
+    memcpy(g_struZcConfigDb.struCloudInfo.u8CloudAddr, CLOUD_ADDR, ZC_CLOUD_ADDR_MAX_LEN);
 }
 
 /*************************************************
@@ -104,6 +96,7 @@ void AC_DealNotifyMessage(ZC_MessageHead *pstruMsg, AC_OptList *pstruOptList, u8
         AC_StoreStatus(WIFIPOWERSTATUS , WIFIPOWERON);
         break;
         case ZC_CODE_WIFI_CONNECTED://wifi连接成功通知
+        printf("wifi connect\n");
         AC_SendDeviceRegsiterWithMac(g_u8EqVersion,g_u8ModuleKey,g_u64Domain);
         break;
         case ZC_CODE_CLOUD_CONNECTED://云端连接通知
@@ -169,6 +162,14 @@ void AC_StoreStatus(u32 u32Type , u32 u32Data)
 *************************************************/
 void AC_BlinkLed(unsigned char blink)
 {
+    if(blink)
+    {
+        printf("led on\n");
+    }
+    else
+    {
+         printf("led off\n");
+    }
 
 }
 /*************************************************
@@ -188,7 +189,7 @@ void AC_DealLed(ZC_MessageHead *pstruMsg, AC_OptList *pstruOptList, u8 *pu8Playl
     {
         case 0://处理开关消息
         case 1:        
-            AC_BlinkLed(((STRU_LED_ONOFF *)pu8Playload)->u8LedOnOff);
+            //AC_BlinkLed(((STRU_LED_ONOFF *)pu8Playload)->u8LedOnOff);
             AC_BuildMessage(CLIENT_SERVER_OK,pstruMsg->MsgId,
                     (u8*)test, sizeof(test),
                     pstruOptList, 
@@ -218,3 +219,16 @@ u32 AC_GetStoreStatus(u32 u32Type)
    return ZC_RET_ERROR;
 }
 
+/*************************************************
+* Function: AC_Init
+* Description: 
+* Author: cxy 
+* Returns: 
+* Parameter: 
+* History:
+*************************************************/
+void AC_Init()
+{
+
+    AC_ConfigWifi();
+}

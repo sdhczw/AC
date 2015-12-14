@@ -38,6 +38,7 @@ u32  AC_GetStoreStatus(u32 u32Type);
 unsigned short crc16_ccitt(const unsigned char *buf, unsigned int len);	
 void AC_StoreStatus(u32 u32Type , u32 u32Data);
 void AC_DealLed(ZC_MessageHead *pstruMsg, AC_OptList *pstruOptList, u8 *pu8Playload);
+void AC_Init(void);
 #ifdef __cplusplus
 }
 #endif

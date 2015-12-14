@@ -154,16 +154,40 @@ void AC_SendMessage(u8 *pu8Msg, u16 u16DataLen)
 * Parameter: 
 * History:
 *************************************************/
-void AC_SendRestMsg(AC_OptList *pstruOptList)
+void AC_SendRestMsg()
 {
     //wifi密码重置
     u16 u16DateLen;
+    u8 u8MsgBuildBuffer[8];
     AC_BuildMessage(ZC_CODE_REST, 0, 
         NULL, 0,        /*payload+payload len*/
-        pstruOptList,
-        g_u8MsgBuildBuffer, &u16DateLen);
+        NULL,
+        u8MsgBuildBuffer, &u16DateLen);
     
-    AC_SendMessage(g_u8MsgBuildBuffer, u16DateLen);
+    AC_SendMessage(u8MsgBuildBuffer, u16DateLen);
+}
+
+/*************************************************
+* Function: AC_SendRestMsg
+* Description: 
+* Author: cxy 
+* Returns: 
+* Parameter: 
+* History:
+*************************************************/
+void AC_SendUbindMsg()
+{
+    //强制解绑
+    u16 u16DateLen;
+    u32 u32ResetFlag = 0;
+    u32 i = 0;
+    u8 u8MsgBuildBuffer[12];
+    AC_BuildMessage(ZC_CODE_UNBIND, 0, 
+        (u8 *)&u32ResetFlag, sizeof(u32ResetFlag),        /*payload+payload len*/
+        NULL,
+        u8MsgBuildBuffer, &u16DateLen);
+    AC_SendMessage(u8MsgBuildBuffer, u16DateLen);
+
 }
 
 /*************************************************
