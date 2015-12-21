@@ -146,7 +146,6 @@ void AC_UartRecv(u8 *pu8Data, u32 u32DataLen)
             {
                 if(data==0x5A)
                 {
-                    AC_Printf("recv start = %d\n", data);
                     g_CurType = PKT_PUREDATA;
                     g_u8RecvDataLen = 0;
                     g_struUartBuffer.u8UartBuffer[g_u8RecvDataLen++] = data; 
@@ -164,7 +163,6 @@ void AC_UartRecv(u8 *pu8Data, u32 u32DataLen)
                 else if(3 == g_u8RecvDataLen)
                 {
                     g_u8CurPktLen = (g_u8CurPktLen<<8) + data;
-                    AC_Printf("recv len = %d\n", g_u8CurPktLen);
                 } 
                 
                 if (g_u8RecvDataLen == g_u8CurPktLen)
@@ -172,10 +170,6 @@ void AC_UartRecv(u8 *pu8Data, u32 u32DataLen)
                     if (data==0x5B)
                     {
                         AC_UartProcess(g_struUartBuffer.u8UartBuffer,g_u8CurPktLen);
-                    }
-                    else
-                    {
-                        AC_Printf("error data end\n");
                     }
                     g_CurType = PKT_UNKNOWN;
                     g_u8RecvDataLen = 0; 
@@ -252,7 +246,6 @@ void AC_DealNotifyMessage(ZC_MessageHead *pstruMsg, AC_OptList *pstruOptList, u8
         u8SendBuff[7] = 0x0f;
         break;
         case ZC_CODE_WIFI_DISCONNECTED://wifi连接成功通知
-        printf("wifi connect\n");
         //AC_SendDeviceRegsiterWithMac(g_u8EqVersion,g_u8ModuleKey,g_u64Domain);
         u8SendBuff[6] = 0xf1;
         u8SendBuff[7] = 0x1f;
@@ -382,11 +375,11 @@ void AC_BlinkLed(unsigned char blink)
 {
     if(blink)
     {
-        printf("led on\n");
+
     }
     else
     {
-         printf("led off\n");
+
     }
 
 }

@@ -380,7 +380,7 @@ u32 AC_CheckSum(u8 * Buffer,u32 len)
 //            AC_Printf("0x%x ",Buffer[i]); 
 //        }
 //        AC_Printf("\n");  
-        AC_Printf("checksum error,recv = 0x%x,calc = 0x%x!!!\n",Buffer[len-2],u8Sum); 
+//        AC_Printf("checksum error,recv = 0x%x,calc = 0x%x!!!\n",Buffer[len-2],u8Sum); 
         return(ZC_RET_ERROR);  //Ð£ÑéºÍ´íÎó 
     }
 } 
