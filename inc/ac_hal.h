@@ -14,6 +14,7 @@
 #include <zc_common.h>
 #include <zc_protocol_interface.h>
 #include <ac_api.h>
+#include <stdio.h>
 #define MSG_SERVER_CLIENT_SET_LED_ONOFF_REQ  (68)
 #define MSG_CLIENT_SERVER_GET_DEV_STATUS_RSP (201)
 #define MSG_SERVER_CLIENT_GET_LED_STATUS_RSP (203) 
@@ -24,7 +25,7 @@
 #define CLOUDCONNECT 1 
 #define CLOUDDISCONNECT 0
 
-#define AC_Printf UARTprintf
+#define AC_Printf printf
 #define WIFIPOWERON 1
 #define WIFIPOWEROFF 0
 #ifdef __cplusplus
@@ -39,6 +40,7 @@ unsigned short crc16_ccitt(const unsigned char *buf, unsigned int len);
 void AC_StoreStatus(u32 u32Type , u32 u32Data);
 void AC_DealLed(ZC_MessageHead *pstruMsg, AC_OptList *pstruOptList, u8 *pu8Playload);
 void AC_Init(void);
+void AC_UartRecv(u8 *pu8Data, u32 u32DataLen);
 #ifdef __cplusplus
 }
 #endif
