@@ -407,7 +407,7 @@ void AC_DealLed(ZC_MessageHead *pstruMsg, AC_OptList *pstruOptList, u8 *pu8Playl
     {
         case 0://处理开关消息
         case 1:        
-            //AC_BlinkLed(((STRU_LED_ONOFF *)pu8Playload)->u8LedOnOff);
+            AC_BlinkLed(((STRU_LED_ONOFF *)pu8Playload)->u8LedOnOff);
             AC_BuildMessage(CLIENT_SERVER_OK,pstruMsg->MsgId,
                     (u8*)test, sizeof(test),
                     pstruOptList, 
