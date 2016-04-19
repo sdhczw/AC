@@ -35,7 +35,7 @@ u64  g_u64Domain = ((((u64)((SUB_DOMAIN_ID & 0xff00) >> 8)) << 48) + (((u64)(SUB
 	+ ((((u64)MAJOR_DOMAIN_ID & 0xff0000000000) >> 40) << 0));
 u8  g_u8DeviceId[ZC_HS_DEVICE_ID_LEN] = DEVICE_ID;
 #ifdef TEST_ADDR	
-#define CLOUD_ADDR "test.ablecloud.cn"
+#define CLOUD_ADDR "dev.ablecloud.cn"
 #else
 #define CLOUD_ADDR "device.ablecloud.cn"
 #endif
@@ -284,6 +284,7 @@ void AC_DealNotifyMessage(ZC_MessageHead *pstruMsg, AC_OptList *pstruOptList, u8
         break;
         case ZC_CODE_WIFI_CONNECTED://wifi连接成功通知
         AC_SendDeviceRegsiterWithMac(g_u8EqVersion,g_u8ModuleKey,(u8*)&g_u64Domain);
+        //AC_SendDeviceRegsiter(g_u8EqVersion,g_u8ModuleKey,(u8*)&g_u64Domain,g_u8DeviceId);
         break;
         case ZC_CODE_CLOUD_CONNECTED://云端连接通知
         AC_StoreStatus(CLOUDSTATUS,CLOUDCONNECT);
@@ -373,14 +374,6 @@ void AC_StoreStatus(u32 u32Type , u32 u32Data)
 *************************************************/
 void AC_BlinkLed(unsigned char blink)
 {
-    if(blink)
-    {
-
-    }
-    else
-    {
-
-    }
 
 }
 /*************************************************
@@ -440,6 +433,5 @@ u32 AC_GetStoreStatus(u32 u32Type)
 *************************************************/
 void AC_Init()
 {
-
     AC_ConfigWifi();
 }

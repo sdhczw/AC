@@ -84,18 +84,17 @@ void AC_BuildMessage(u8 u8MsgCode, u8 u8MsgId,
     u8 *pu8Msg, u16 *pu16Len)
 {
     //协议组包函数
-    ZC_MessageHead *pstruMsg = NULL;
+    ZC_MessageHead *pstruMsg = (ZC_MessageHead *)pu8Msg;
     u16 u16OptLen = 0;
     u16 crc = 0;
     
-    pstruMsg = (ZC_MessageHead *)pu8Msg;
-    pstruMsg->MsgCode = u8MsgCode;
-    pstruMsg->MsgId = u8MsgId;  
 
-    pstruMsg->Version = 0;
 
     AC_BuildOption(pstruOptList, &pstruMsg->OptNum, (pu8Msg + sizeof(ZC_MessageHead)), &u16OptLen);
-    memcpy((pu8Msg + sizeof(ZC_MessageHead) + u16OptLen), pu8Payload, u16PayloadLen);
+    memmove((pu8Msg + sizeof(ZC_MessageHead) + u16OptLen), pu8Payload, u16PayloadLen);   
+    pstruMsg->MsgCode = u8MsgCode;
+    pstruMsg->MsgId = u8MsgId;  
+    pstruMsg->Version = 0;
 
     /*updata len*/
     pstruMsg->Payloadlen = ZC_HTONS(u16PayloadLen + u16OptLen);
@@ -287,6 +286,32 @@ void AC_SendDeviceRegsiterWithMac(u8 *pu8EqVersion, u8 *pu8ModuleKey, u8 *pu8Dom
 
     AC_BuildMessage(ZC_CODE_EXT, 0, 
         (u8*)&struExtReg, sizeof(ZC_ExtRegisterReq),   /*payload+payload len*/
+        NULL,
+        g_u8MsgBuildBuffer, &u16DateLen);
+    
+    AC_SendMessage(g_u8MsgBuildBuffer, u16DateLen);
+}
+
+/*************************************************
+* Function: AC_SendDeviceRegsiter
+* Description: 
+* Author: cxy 
+* Returns: 
+* Parameter: 
+* History:
+*************************************************/
+void AC_SendDeviceRegsiter(u8 *pu8EqVersion, u8 *pu8ModuleKey, u8 *pu8Domain, u8 *pu8DeviceId)
+{
+    //设备注册请求
+    ZC_RegisterReq *pstruReg= (ZC_RegisterReq *)g_u8MsgBuildBuffer;
+    u16 u16DateLen;
+    memcpy(pstruReg->u8EqVersion, pu8EqVersion, ZC_EQVERSION_LEN);
+    memcpy(pstruReg->u8ModuleKey, pu8ModuleKey, ZC_MODULE_KEY_LEN); 
+    memcpy(pstruReg->u8Domain, pu8Domain, ZC_DOMAIN_LEN); 
+    strcpy((char *)pstruReg->u8DeviceId, (const char *)pu8DeviceId); 
+
+    AC_BuildMessage(ZC_CODE_REGSITER, 0, 
+        (u8*)pstruReg, sizeof(ZC_RegisterReq)+strlen((const char *)pu8DeviceId),   /*payload+payload len*/
         NULL,
         g_u8MsgBuildBuffer, &u16DateLen);
     
