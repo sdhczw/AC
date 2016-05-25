@@ -35,9 +35,9 @@ u64  g_u64Domain = ((((u64)((SUB_DOMAIN_ID & 0xff00) >> 8)) << 48) + (((u64)(SUB
 	+ ((((u64)MAJOR_DOMAIN_ID & 0xff0000000000) >> 40) << 0));
 u8  g_u8DeviceId[ZC_HS_DEVICE_ID_LEN] = DEVICE_ID;
 #ifdef TEST_ADDR	
-#define CLOUD_ADDR "dev.ablecloud.cn"
+#define CLOUD_ADDR "test.ablecloud.cn"
 #else
-#define CLOUD_ADDR "device.ablecloud.cn"
+#define CLOUD_ADDR ZC_CLOUD_SERVER
 #endif
 typedef enum {
     PKT_UNKNOWN,

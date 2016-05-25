@@ -45,7 +45,7 @@ void AC_SendDeviceRegsiterWithMac(u8 *pu8EqVersion, u8 *pu8ModuleKey, u8 *pu8Dom
 void AC_SendDeviceRegsiter(u8 *pu8EqVersion, u8 *pu8ModuleKey, u8 *pu8Domain, u8 *pu8DeviceId);
 void AC_SendDeviceStart(void);
 u32 AC_CheckSum(u8 * Buffer,u32 len); 
-u8 AC_CalcSum(u8 *pu8Src, u8 u8Len);
+u8 AC_CalcSum(u8 *pu8Src, u16 u16Len);
 #ifdef __cplusplus
 }
 #endif

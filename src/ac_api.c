@@ -125,7 +125,7 @@ void AC_BuildEasyMessage(u8 u8MsgCode, u8 u8MsgId,
     {
         *pu16Len = 0xc+u16PayloadLen;
         pu8Msg[0] = 0x5a;
-        pu8Msg[1] = 0;
+        pu8Msg[1] = (*pu16Len>>8)&0xff;
         pu8Msg[2] = *pu16Len;
         pu8Msg[3] = u8MsgId;   
         pu8Msg[4] = 0x01;  
@@ -140,7 +140,7 @@ void AC_BuildEasyMessage(u8 u8MsgCode, u8 u8MsgId,
     {
         *pu16Len = 0x8+u16PayloadLen;
         pu8Msg[0] = 0x5a;
-        pu8Msg[1] = 0;
+        pu8Msg[1] = (*pu16Len>>8)&0xff;
         pu8Msg[2] = *pu16Len;
         pu8Msg[3] = u8MsgId;   
         pu8Msg[4] = 0x00;  
@@ -366,11 +366,11 @@ void AC_RecvMessage(ZC_MessageHead *pstruMsg)
 * Parameter: 
 * History:
 *************************************************/
-u8 AC_CalcSum(u8 *pu8Src, u8 u8Len)
+u8 AC_CalcSum(u8 *pu8Src, u16 u16Len)
 {
 	u8 u8Sum = 0;
 	u32 u32i;
-	for(u32i = 0; u32i < u8Len;u32i++)
+	for(u32i = 0; u32i < u16Len;u32i++)
 	{
 		u8Sum += pu8Src[u32i];
 	}
